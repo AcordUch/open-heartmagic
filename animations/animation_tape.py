@@ -6,9 +6,9 @@ class AnimationTape:
     ) -> None:
         self._start_frames: list[str] = (list() if start_frames is None
                                          else start_frames)
-        self._loop_frames: list[str] = (list() if start_frames is None
+        self._loop_frames: list[str] = (list() if loop_frames is None
                                         else loop_frames)
-        self._end_frames: list[str] = (list() if start_frames is None
+        self._end_frames: list[str] = (list() if end_frames is None
                                        else end_frames)
 
     def get_start_frames(self) -> list[str]:

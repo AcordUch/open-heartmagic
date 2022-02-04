@@ -93,6 +93,7 @@ def main() -> None:
     print("\U00002665 magic")
     client.start(
         password=input("If you have 2FA input password: ")
+        if SESSION_STRING is None else ""
     )
     print("log in\n")
     if need_login:
