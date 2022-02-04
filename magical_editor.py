@@ -9,7 +9,7 @@ from configs.config import (
 )
 from configs.config import write_session_string_in_config
 from animations.tape_factory import TapeFactory
-from anim_setting import AnimationSetting
+from animations.anim_setting import AnimationSetting
 
 
 SEPARATOR: str = "|"
