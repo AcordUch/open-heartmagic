@@ -14,7 +14,7 @@ from anim_setting import AnimationSetting
 
 SEPARATOR: str = "|"
 DELAY_TIME: float = 0.7
-CONTROLLER_BY_COMMAND: dict[str: AnimationSetting] = {
+TAPE_BY_COMMAND: dict[str: AnimationSetting] = {
     "/example": AnimationSetting(TapeFactory.get_example(), 2),
     "/pulse_heart": AnimationSetting(TapeFactory.get_pulse_heart(), 3),
     "/growH": AnimationSetting(TapeFactory.get_increasing(), 1)
@@ -35,7 +35,7 @@ async def handler_new_message(event: events.NewMessage.Event) -> None:
                 update.message.split(SEPARATOR, 1) if SEPARATOR in update.message
                 else (update.message, None)
             )
-            controller = CONTROLLER_BY_COMMAND.get(command)
+            controller = TAPE_BY_COMMAND.get(command)
             if controller is not None:
                 print(
                     f"id: {update.id} userId: {update.user_id}\n"
