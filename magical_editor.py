@@ -13,14 +13,15 @@ from animations.anim_setting import AnimationSetting
 
 
 SEPARATOR: str = "|"
-DELAY_TIME: float = 0.7
+DELAY_TIME: float = 0.6
 TAPE_BY_COMMAND: dict[str: AnimationSetting] = {
     "/example": AnimationSetting(TapeFactory.get_example(), 2),
     "/pulse_heart": AnimationSetting(TapeFactory.get_pulse_heart(), 3),
-    "/growH": AnimationSetting(TapeFactory.get_increasing(), 1)
+    "/growH": AnimationSetting(TapeFactory.get_increasing(), 1),
+    "/blink": AnimationSetting(TapeFactory.get_blinking_heart(7), 1),
 }
 
-need_login = False
+print_session_key = False
 client: TelegramClient = TelegramClient(
     StringSession(SESSION_STRING), API_ID, API_HASH
 )
@@ -48,7 +49,7 @@ async def handler_new_message(event: events.NewMessage.Event) -> None:
 
 
 async def play_animation(
-        anim_setting: AnimationSetting,
+        animation_setting: AnimationSetting,
         message: Message,
         text: str = None
 ) -> None:
@@ -63,12 +64,12 @@ async def play_animation(
                 continue
             sleep(DELAY_TIME)
 
-    anim_controller = anim_setting.control
+    tape = animation_setting.tape
 
-    await play(anim_controller.get_start_frames())
-    for i in range(anim_setting.repeat_time):
-        await play(anim_controller.get_loop_frames())
-    await play(anim_controller.get_end_frames())
+    await play(tape.get_start_frames())
+    for i in range(animation_setting.repeat_time):
+        await play(tape.get_loop_frames())
+    await play(tape.get_end_frames())
 
     if text is not None:
         await message.edit(text)
@@ -76,15 +77,15 @@ async def play_animation(
 
 def process_key() -> None:
     def configure_arg_parser():
-        arg_parser.add_argument("--login", "-l", default=False,
-                                action="store_true", dest="login",
+        arg_parser.add_argument("--sessionKey", "-sk", default=False,
+                                action="store_true", dest="sk",
                                 help="Получить ключ сессии")
 
-    global need_login
+    global print_session_key
     arg_parser = ArgumentParser()
     configure_arg_parser()
     args = arg_parser.parse_args()
-    need_login = args.login
+    print_session_key = args.sk
 
 
 def main() -> None:
@@ -96,7 +97,7 @@ def main() -> None:
         if SESSION_STRING is None else ""
     )
     print("log in\n")
-    if need_login:
+    if print_session_key:
         print(client.session.save(), end="\n\n")
     if SESSION_STRING is None:
         write_session_string_in_config(client.session.save())
